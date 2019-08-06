@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AngularBlok.API.Models;
+using System.Threading;
 
 namespace AngularBlok.API.Controllers
 {
@@ -24,6 +25,7 @@ namespace AngularBlok.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategory()
         {
+            Thread.Sleep(1000);
             return await _context.Category.ToListAsync();
         }
 

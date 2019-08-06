@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
+using AngularBlok.API.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+
 
 namespace AngularBlok.API
 {
@@ -25,6 +22,19 @@ namespace AngularBlok.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(opts =>
+            {
+                opts.AddDefaultPolicy(x =>
+                {
+                    x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials();    
+                });
+            });
+
+            services.AddDbContext<UdemyAngularBlokDBContext>(opts =>
+            {
+                opts.UseSqlServer(Configuration["ConnectionStrings:DefaultSqlConnectionString"]);
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -41,6 +51,8 @@ namespace AngularBlok.API
                 app.UseHsts();
             }
 
+            app.UseCors();
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseMvc();
         }
